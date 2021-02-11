@@ -31,6 +31,18 @@ module Enumerable
     end
     output
   end
+
+  def my_all?
+    output = false
+    length.times do |i|
+      condition = yield to_a[i]
+      if condition
+        output = true
+        break
+      end
+    end
+    output
+  end
 end
 
 [1, 2, 3, 4, 5].my_each { |num| puts num }
@@ -57,3 +69,9 @@ puts
 puts 'THIS IS MY_ALL? METHOD CALL'
 
 puts(%w[ant bear cat].my_all? { |word| word.include?('b') })
+
+20.times { print '-' }
+puts
+puts 'THIS IS MY_ANY? METHOD CALL'
+
+puts(%w[ant bear cat].my_all? { |word| word.length >= 5 })
