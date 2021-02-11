@@ -19,6 +19,18 @@ module Enumerable
     end
     selected
   end
+
+  def my_all?
+    output = true
+    length.times do |i|
+      condition = yield to_a[i]
+      unless condition
+        output = false
+        break
+      end
+    end
+    output
+  end
 end
 
 [1, 2, 3, 4, 5].my_each { |num| puts num }
@@ -27,7 +39,7 @@ puts
 
 20.times { print '-' }
 puts
-puts 'THIS IS MY_EACH_WITH_INDEX_EXECUTION'
+puts 'THIS IS MY_EACH_WITH_INDEX EXECUTION'
 
 my_array = { name: 'Diego', country: 'Mexico' }
 my_array.my_each_with_index do |data, idx|
@@ -36,6 +48,12 @@ end
 
 20.times { print '-' }
 puts
-puts 'THIS IS MY_SELECT'
+puts 'THIS IS MY_SELECT METHOD CALL'
 
 [2, 3, 4, 6, 7, 16].my_select { |num| puts num if num.even? }
+
+20.times { print '-' }
+puts
+puts 'THIS IS MY_ALL? METHOD CALL'
+
+puts(%w[ant bear cat].my_all? { |word| word.include?('b') })
