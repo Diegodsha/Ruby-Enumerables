@@ -55,6 +55,20 @@ module Enumerable
     end
     output
   end
+
+  def my_count(param = nil)
+    count = 0
+    length.times do |i|
+      if block_given?
+        count += 1 if yield to_a[i]
+      elsif param.nil?
+        count = length
+      elsif to_a[i] == param
+        count += 1
+      end
+    end
+    count
+  end
 end
 
 [1, 2, 3, 4, 5].my_each { |num| puts num }
@@ -92,3 +106,8 @@ puts
 puts '###### THIS IS MY_NONE? METHOD CALL ########'
 
 puts(%w[ant bear cat].my_none? { |word| word.include?('z') })
+
+puts
+puts '###### THIS IS MY_COUNT? METHOD CALL ########'
+
+puts [1, 2, 4, 2, 3].my_count(&:even?)
