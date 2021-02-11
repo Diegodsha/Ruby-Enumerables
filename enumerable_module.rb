@@ -32,12 +32,24 @@ module Enumerable
     output
   end
 
-  def my_all?
+  def my_any?
     output = false
     length.times do |i|
       condition = yield to_a[i]
       if condition
         output = true
+        break
+      end
+    end
+    output
+  end
+
+  def my_none?
+    output = true
+    length.times do |i|
+      condition = yield to_a[i]
+      if condition
+        output = false
         break
       end
     end
@@ -74,4 +86,9 @@ puts(%w[ant bear cat].my_all? { |word| word.include?('b') })
 puts
 puts 'THIS IS MY_ANY? METHOD CALL'
 
-puts(%w[ant bear cat].my_all? { |word| word.length >= 5 })
+puts(%w[ant bear cat].my_any? { |word| word.length >= 5 })
+
+puts
+puts '###### THIS IS MY_NONE? METHOD CALL ########'
+
+puts(%w[ant bear cat].my_none? { |word| word.include?('z') })
