@@ -69,6 +69,17 @@ module Enumerable
     end
     count
   end
+
+  def my_map
+    return to_enum(:my_map) unless block_given?
+
+    output = []
+    to_a.my_each do |item|
+      compute = yield item
+      output.push(compute)
+    end
+    output
+  end
 end
 
 [1, 2, 3, 4, 5].my_each { |num| puts num }
@@ -111,3 +122,8 @@ puts
 puts '###### THIS IS MY_COUNT? METHOD CALL ########'
 
 puts [1, 2, 4, 2, 3].my_count(&:even?)
+
+puts
+puts '###### THIS IS MY_MAP? METHOD CALL ########'
+
+puts((1..5).my_map { |i| i * i })
