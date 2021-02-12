@@ -1,30 +1,51 @@
 module Enumerable
   def my_each
+    return to_enum(:my_each) unless block_given?
+
     length.times do |i|
       yield to_a[i]
     end
   end
 
   def my_each_with_index
+    return to_enum(:my_each_with_index) unless block_given?
+
     length.times do |i|
       yield to_a[i], i
     end
   end
 
   def my_select
+    return to_enum(:my_select) unless block_given?
+
     selected = []
-    length.times do |i|
+    to_a.length.times do |i|
       condition = yield to_a[i]
       selected.push(to_a[i]) if condition
     end
     selected
   end
 
-  def my_all?
+  def my_all?(param = nil)
     output = true
     length.times do |i|
-      condition = yield to_a[i]
-      unless condition
+      if block_given? && !yield(to_a[i])
+        output = false
+        break
+      end
+
+      
+      if param.is_a?(Regexp) && !param.match?(to_a[i])
+        output = false
+        break
+      elsif !param.is_a?(Object) && !to_a[i].is_a?(param) 
+        output = false
+        break
+      # else 
+      #   output = to_a.uniq.length == 1 
+      
+      end
+      if param.nil? && !to_a[i]
         output = false
         break
       end
@@ -80,36 +101,53 @@ module Enumerable
     end
     output
   end
+
+  # def my_inject (acc = nil, item = nil)
+
+  #   # if acc.is_a? Symbol 
+  #   #  item = acc
+    
+     
+  #   # end
+  #   if block_given? && !item.nil?
+  #     to_a.my_each {|i| i  }
+
+  #   end
+  #   acc
+
+  # end
+
 end
 
-[1, 2, 3, 4, 5].my_each { |num| puts num }
+puts
+puts '###### THIS IS MY_EACH METHOD CALL ########'
+
+puts(%w[a b c].my_each { |x| print x, ' -- ' })
 
 puts
+puts '###### THIS IS MY_EACH_WITH_INDEX METHOD CALL ########'
 
-20.times { print '-' }
-puts
-puts 'THIS IS MY_EACH_WITH_INDEX EXECUTION'
-
-my_array = { name: 'Diego', country: 'Mexico' }
-my_array.my_each_with_index do |data, idx|
-  puts "The #{data[0]} is #{data[1]}" if idx == 1
+hash = {}
+%w[cat dog wombat].my_each_with_index do |item, index|
+  hash[item] = index
 end
+p hash
 
-20.times { print '-' }
 puts
-puts 'THIS IS MY_SELECT METHOD CALL'
+puts '###### THIS IS MY_SELECT METHOD CALL ########'
 
-[2, 3, 4, 6, 7, 16].my_select { |num| puts num if num.even? }
+p(1..10).my_select { |i| (i % 3).zero? }
 
-20.times { print '-' }
 puts
-puts 'THIS IS MY_ALL? METHOD CALL'
+puts '###### THIS IS MY_ALL? METHOD CALL ########'
 
 puts(%w[ant bear cat].my_all? { |word| word.include?('b') })
+puts([3,4,3,3].my_all?(String))
+puts(['string', true, 99].my_all?)
+puts([].my_all?)
 
-20.times { print '-' }
 puts
-puts 'THIS IS MY_ANY? METHOD CALL'
+puts '###### THIS IS MY_ANY? METHOD CALL ########'
 
 puts(%w[ant bear cat].my_any? { |word| word.length >= 5 })
 
@@ -119,11 +157,17 @@ puts '###### THIS IS MY_NONE? METHOD CALL ########'
 puts(%w[ant bear cat].my_none? { |word| word.include?('z') })
 
 puts
-puts '###### THIS IS MY_COUNT? METHOD CALL ########'
+puts '###### THIS IS MY_COUNT METHOD CALL ########'
 
 puts [1, 2, 4, 2, 3].my_count(&:even?)
 
 puts
-puts '###### THIS IS MY_MAP? METHOD CALL ########'
+puts '###### THIS IS MY_MAP METHOD CALL ########'
 
 puts((1..5).my_map { |i| i * i })
+
+puts
+puts '###### THIS IS MY_INJECT METHOD CALL ########'
+
+#puts((5..10).my_inject(:+))
+#puts((5..10).my_inject { |sum, n|  sum + n })
