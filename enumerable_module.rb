@@ -1,3 +1,5 @@
+# rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+
 module Enumerable
   def my_each
     return to_enum(:my_each) unless block_given?
@@ -28,27 +30,38 @@ module Enumerable
 
   def my_all?(param = nil)
     output = true
+
     length.times do |i|
       if block_given? && !yield(to_a[i])
         output = false
         break
+      elsif !block_given? && !to_a[i]
+        output = false
+        break
       end
 
-      
       if param.is_a?(Regexp) && !param.match?(to_a[i])
         output = false
         break
-      elsif !param.is_a?(Object) && !to_a[i].is_a?(param) 
-        output = false
-        break
-      # else 
-      #   output = to_a.uniq.length == 1 
-      
-      end
-      if param.nil? && !to_a[i]
+      elsif (param.is_a?(Numeric) || param.is_a?(String)) && !to_a[i].is_a?(param)
         output = false
         break
       end
+
+      # if param.is_a?(Regexp) && !param.match?(to_a[i])
+      #   output = false
+      #   break
+      # elsif !param.is_a?(Object) && !to_a[i].is_a?(param)
+      #   output = false
+      #   break
+      # # else
+      # #   output = to_a.uniq.length == 1
+
+      # end
+      # if param.nil? && !to_a[i]
+      #   output = false
+      #   break
+      # end
     end
     output
   end
@@ -102,21 +115,25 @@ module Enumerable
     output
   end
 
-  # def my_inject (acc = nil, item = nil)
+  def my_inject(accum = nil, sym = nil)
+    raise LocalJumpError if accum.nil? && sym.nil? && !block_given?
+    #output = 0
+    to_a.my_each do |item|
+      
+      if block_given? && !accum.nil?
+        accum = yield accum, item
 
-  #   # if acc.is_a? Symbol 
-  #   #  item = acc
-    
-     
-  #   # end
-  #   if block_given? && !item.nil?
-  #     to_a.my_each {|i| i  }
-
-  #   end
-  #   acc
-
-  # end
-
+      elsif block_given? && accum.nil?
+        accum = item
+        accum = yield accum, item
+      elsif !block_given? && (!accum.nil && !sym.nil)
+        accum = accum sym to_a[i]
+      elsif !block_given && (accum.nil && !sym.nil)
+        accum = accum sym item
+      end
+    end
+    accum
+  end
 end
 
 puts
@@ -136,14 +153,15 @@ p hash
 puts
 puts '###### THIS IS MY_SELECT METHOD CALL ########'
 
-p(1..10).my_select { |i| (i % 3).zero? }
+puts((1..10).my_select { |i| (i % 3).zero? })
 
 puts
 puts '###### THIS IS MY_ALL? METHOD CALL ########'
 
-puts(%w[ant bear cat].my_all? { |word| word.include?('b') })
-puts([3,4,3,3].my_all?(String))
-puts(['string', true, 99].my_all?)
+puts(%w[ant bear cat].my_all? { |word| word.include?('a') })
+puts([3,4,3,3].my_all?(Float))
+puts(%w[ant bear cat].all?(/a/))
+puts([nil, true, 99].my_all?)
 puts([].my_all?)
 
 puts
@@ -169,5 +187,15 @@ puts((1..5).my_map { |i| i * i })
 puts
 puts '###### THIS IS MY_INJECT METHOD CALL ########'
 
-#puts((5..10).my_inject(:+))
-#puts((5..10).my_inject { |sum, n|  sum + n })
+puts((5..10).my_inject(1) { |product, n| product * n })
+puts((5..10).my_inject { |sum, n| sum + n })
+# puts((5..10).my_inject(2, :*))
+# puts((5..10).my_inject(:+))
+
+# longest = %w{ cat sheep bear }.inject do |memo, word|
+#   memo.length > word.length ? memo : word
+# end
+
+# puts longest
+
+# rubocop:enable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
