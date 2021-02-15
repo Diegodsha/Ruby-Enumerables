@@ -98,7 +98,7 @@ module Enumerable
     to_a.my_each do |item|
       compute = yield item
       output.push(compute)
-    end
+        
     output
   end
 
