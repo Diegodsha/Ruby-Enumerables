@@ -8,6 +8,7 @@ module Enumerable
     to_a.length.times do |i|
       yield to_a[i]
     end
+    self
   end
 
   def my_each_with_index
@@ -16,6 +17,7 @@ module Enumerable
     to_a.length.times do |i|
       yield to_a[i], i
     end
+    self
   end
 
   def my_select
@@ -113,7 +115,9 @@ module Enumerable
       to_a.my_each { |item| param = yield(param, item) }
     elsif block_given? && param.nil?
       param = to_a[0]
-      (to_a.length - 1).times { |index| param = yield(param, to_a[index] + 1) }
+
+      (to_a.length - 1).times { |index| param = yield(param, to_a[index + 1]) }
+
     elsif !param.nil? && !sym.nil?
       to_a.my_each { |item| param = param.send(sym, item) }
     elsif param.is_a?(Symbol) && sym.nil?

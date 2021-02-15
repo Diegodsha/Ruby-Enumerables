@@ -39,4 +39,4 @@ To run this program on your local machine, simply follow the steps below:
 * [The Odin Project](https://www.theodinproject.com/)
 
 ## License
-* This project is [MIT](https://opensource.org/licenses/MIT) licensed.
+* This project is [MIT](https://github.com/Diegodsha/Ruby-Enumerables/blob/feature/enums/LICENSE) licensed.

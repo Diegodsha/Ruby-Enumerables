@@ -3,16 +3,17 @@ require_relative 'enumerable_module.rb'
 puts
 puts '###### THIS IS MY_EACH METHOD CALL ########'
 
-%w[a b c].my_each { |x| print x, ' -- ' }
+p(%w[a b c].my_each { |x| print x, ' -- ' })
 
 puts
 puts '###### THIS IS MY_EACH_WITH_INDEX METHOD CALL ########'
 
 hash = {}
-%w[cat dog wombat].my_each_with_index do |item, index|
+output = %w[cat dog wombat].my_each_with_index do |item, index|
   hash[item] = index
 end
 p hash
+p output
 
 puts
 puts '###### THIS IS MY_SELECT METHOD CALL ########'
@@ -80,8 +81,12 @@ puts '###### THIS IS MY_INJECT METHOD CALL ########'
 
 puts((5..10).my_inject(2) { |product, n| product * n }) #=> 151200
 puts((5..10).my_inject { |sum, n| sum + n }) #=> 45
+puts([2, 4, 5].inject { |sum, n| sum * n })
 puts((5..10).my_inject(20, :*)) #=> 151200
 puts((5..10).my_inject(:+)) #=> 45
+
+my_block = proc { |product, n| product * n }
+puts((5..10).my_inject(&my_block))
 
 arr = %w[bear sheep goat]
 longest = arr.inject do |memo, word|
@@ -91,7 +96,14 @@ end
 puts longest
 
 def multiply_els(arr)
-  arr.my_inject(:*)
+  my_block = proc { |product, n| product * n }
+  arr.my_inject(&my_block)
+end
+
+def multiply_els1(arr)
+  my_block = proc { |product, n| product * n }
+  arr.inject(&my_block)
 end
 
 puts multiply_els([2, 4, 5])
+puts multiply_els1([2, 4, 5])
