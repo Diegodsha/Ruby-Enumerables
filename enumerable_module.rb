@@ -127,7 +127,6 @@ module Enumerable
     end
     param
   end
-
 end
 
 def multiply_els(arr)
