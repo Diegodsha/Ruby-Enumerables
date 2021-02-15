@@ -98,10 +98,11 @@ module Enumerable
     return to_enum(:my_map) unless block_given? || param
 
     output = []
-    to_a.my_each do |item|
-      compute = yield item
-      output.push(compute)
-        
+    if param
+      to_a.my_each { |item| output.push(param.call(item)) }
+    else
+      to_a.my_each { |item| output.push(yield(item)) }
+    end
     output
   end
 
