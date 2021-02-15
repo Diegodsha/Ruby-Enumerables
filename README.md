@@ -10,7 +10,7 @@ We replicated methods like:
 * inject ... etc.
 
 ## Getting Started
-To run this programs on your local machine, simply follow the steps below:
+To run this program on your local machine, simply follow the steps below:
 
 ### Prerequisites
 * Install the [ruby programming language](https://www.ruby-lang.org/en/documentation/installation/)
