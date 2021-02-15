@@ -127,6 +127,12 @@ module Enumerable
     end
     param
   end
+
+end
+
+def multiply_els(arr)
+  my_block = proc { |product, n| product * n }
+  arr.my_inject(&my_block)
 end
 
 # rubocop:enable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
