@@ -49,4 +49,22 @@ describe "#my_each_with_index" do
     end
 end
 
+describe "#my_select" do
+    it "Returns an Enumerator if no block is given" do
+        expect(array.my_select).to be_an Enumerator
+    end
+
+    it "It does not mutate the original array" do
+        expect(array.my_each_with_index(&block)).to eq(array_clone)
+    end
+    
+    it "It returns an array containing all elements of enum for wich the given block returns true value" do
+        block = proc { |num| num.even?}
+        first_array= array.my_select(&block)
+        second_array = array.select(&block)
+        expect(first_array).to  eq(second_array)
+    end
+    
+end
+
 end
