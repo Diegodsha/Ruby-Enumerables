@@ -73,7 +73,7 @@ describe "#my_select" do
     
 end
 
-describe "#my_all" do
+describe "#my_all?" do
 
     it "Returns true if block never return false" do
         block = proc { |str| str.length >= 3 }
@@ -95,14 +95,52 @@ describe "#my_all" do
     it "Returns false if not all elements are the same class" do
         expect(array_numeric.my_all?(String)).to be false
     end
-    it "Reurn true if all elements are truthy" do
+    it "Return true if all elements are truthy" do
         expect(array_truthy.my_all?).to be true
     end
-    it "Reurn true if array is empty" do
+    it "Return true if array is empty" do
         expect(array_empty.my_all?).to be true
     end
 
     
+end
+
+describe "#my_any?" do
+
+    it "Returns true if any of the elements return true" do
+        block = proc { |str| str.length >= 3 }
+        expect(array_str.my_any?(&block)).to be true
+    end
+
+    it "Returns false if any of the elements return false" do
+        block = proc { |str| str.length >= 5 }
+        expect(array_str.my_any?(&block)).to be false
+    end
+
+    it "Returns true if any element match the regular expression" do
+        expect(array_str.my_any?(/t/)).to be true
+    end
+
+    it "Returns false if any element don't match the regular expression" do
+        expect(array_str.my_any?(/z/)).to be false
+    end
+
+    it "Returns true if any element are the same class" do
+        expect(array_falsy.my_any?(Numeric)).to be true
+    end
+
+    it "Returns false if any element is not the same class" do
+        expect(array_numeric.my_any?(String)).to be false
+    end
+
+    it "Returns true if any element is truthy" do
+        expect(array_truthy.my_any?).to be true
+    end
+
+    it "Return false if array is empty" do
+        expect(array_empty.my_any?).to be false
+    end
+
 end
 
 end
