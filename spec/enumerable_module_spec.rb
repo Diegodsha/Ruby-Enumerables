@@ -9,6 +9,12 @@ describe Enumerable do
     let(:array_clone) { array.clone } 
     let(:block) { proc {|value| value + 1} } 
     let(:block_index) { proc {|value, index| value + index} } 
+    let(:array_str) { %w[ant bear cat] }
+    let(:array_numeric) { [1, 2i, 3.14] }
+    let(:array_falsy){ [nil, true, 99] }
+    let(:array_truthy){ [true, true, 99] }
+    let(:array_empty){ [] }
+
 describe "#my_each" do
     it "Returns an Enumerator if no block is given" do
         expect(array.my_each).to be_an Enumerator
@@ -64,6 +70,38 @@ describe "#my_select" do
         second_array = array.select(&block)
         expect(first_array).to  eq(second_array)
     end
+    
+end
+
+describe "#my_all" do
+
+    it "Returns true if block never return false" do
+        block = proc { |str| str.length >= 3 }
+        expect(array_str.my_all?(&block)).to be true
+    end
+    it "Returns false if block never return true" do
+        block = proc { |str| str.length >= 4 }
+        expect(array_str.my_all?(&block)).to be false
+    end
+    it "Returns false if not all elements match the regular expression" do
+        expect(array_str.my_all?(/t/)).to be false
+    end
+    it "Returns true if all elements match the regular expression" do
+        expect(array_str.my_all?(/a/)).to be true
+    end
+    it "Returns true if all elements are the same class" do
+        expect(array_numeric.my_all?(Numeric)).to be true
+    end
+    it "Returns false if not all elements are the same class" do
+        expect(array_numeric.my_all?(String)).to be false
+    end
+    it "Reurn true if all elements are truthy" do
+        expect(array_truthy.my_all?).to be true
+    end
+    it "Reurn true if array is empty" do
+        expect(array_empty.my_all?).to be true
+    end
+
     
 end
 
