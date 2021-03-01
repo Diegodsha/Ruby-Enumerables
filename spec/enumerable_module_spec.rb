@@ -234,8 +234,8 @@ describe Enumerable do
 
     describe '#multiply_els' do
       it 'behaves same as inject but taking a proc block' do
-        block = proc { |product, n| product * n }
-        expect((5..10).my_inject(&block)).to eq(151_200)
+        array2 = [1, 2, 3, 4, 5]
+        expect(multiply_els(array2)).to eq(120)
       end
     end
   end
