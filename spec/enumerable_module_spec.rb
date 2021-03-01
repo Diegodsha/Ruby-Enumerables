@@ -1,6 +1,6 @@
 require './enumerable_module'
 
-ARRAY_SIZE = 50
+ARRAY_SIZE = 15
 LOWEST_VALUE = 0
 HIGHEST_VALUE = 9
 
@@ -10,7 +10,7 @@ describe Enumerable do
   let(:block) { proc { |value| value + 1 } }
   let(:block_index) { proc { |value, index| value + index } }
   let(:array_str) { %w[ant bear cat] }
-  let(:array_numeric) { [1, 2i, 3.14] }
+  let(:array_numeric) { [1, 2i, 3.14, 1] }
   let(:array_falsy) { [nil, true, 99] }
   let(:array_truthy) { [true, true, 99] }
   let(:array_empty) { [] }
@@ -134,6 +134,109 @@ describe Enumerable do
 
     it 'Return false if array is empty' do
       expect(array_empty.my_any?).to be false
+    end
+  end
+
+  describe '#my_none?' do
+    it 'Returns true if the block never returns true' do
+      block = proc { |str| str.length == 5 }
+      expect(array_str.my_none?(&block)).to be true
+    end
+
+    it 'Returns false if one element returns true' do
+      block = proc { |str| str.length >= 4 }
+      expect(array_str.my_none?(&block)).to be false
+    end
+
+    it 'Returns true if none of the elements match the regular expression' do
+      expect(array_str.my_none?(/d/)).to be true
+    end
+
+    it 'Returns false if one element match the regular expression' do
+      expect(array_str.my_none?(/t/)).to be false
+    end
+
+    it 'Returns false if one element is the same class' do
+      expect(array_falsy.my_none?(Numeric)).to be false
+    end
+
+    it 'Returns true if none of the elements are not the same class' do
+      expect(array_numeric.my_none?(String)).to be true
+    end
+
+    it 'Return false only if one of the collection members is true' do
+      expect(array_falsy.my_none?).to be false
+    end
+
+    it 'Return true only if none of the collection members are true' do
+      expect(array_empty.my_none?).to be true
+    end
+  end
+
+  describe '#my_count' do
+    it 'Returns the number of items through enumeration' do
+      expect(array.my_count).to eq(15)
+    end
+
+    it 'If an argument is given, the number of items in enum that are equal to item are counted' do
+      expect(array_numeric.my_count(1)).to eq(2)
+    end
+
+    it 'If a block is given, it counts the number of elements yielding a true value' do
+      block = proc { |element| element == 1 }
+      expect(array_numeric.my_count(&block)).to eq(2)
+    end
+  end
+
+  describe '#my_map' do
+    it 'Returns an Enumerator if no block is given' do
+      expect(array.my_map).to be_an Enumerator
+    end
+
+    it 'Returns a new array with the results of running block once for every element in enum' do
+      expect(array.my_map(&block)).to eq(array.map(&block))
+    end
+
+    it 'It excecutes the given code block once for each element' do
+      my_output = 0
+      block = proc { |value| my_output += value }
+      array.my_map(&block)
+      first_output = my_output.dup
+      my_output = 0
+      array.map(&block)
+      expect(first_output).to eq(my_output)
+    end
+  end
+
+  describe '#my_inject' do
+    it 'Combines all elements of enum, specified by a block or a symbol that names a method or operator' do
+      expect((LOWEST_VALUE...HIGHEST_VALUE).my_inject(:+)).to eq(36)
+    end
+
+    it 'Same using a block and inject' do
+      block = proc { |sum, n| sum + n }
+      expect((LOWEST_VALUE...HIGHEST_VALUE).my_inject(&block)).to eq(36)
+    end
+
+    it 'If you specify a block, then for each element in enum the block is passed an accumulator and the element' do
+      block = proc { |product, n| product * n }
+      expect((5..10).my_inject(&block)).to eq(151_200)
+    end
+
+    it 'Same using parameters and inject' do
+      expect((5..10).my_inject(1, :*)).to eq(151_200)
+    end
+
+    it 'If you specify a block, then for each element in enum the block is passed an accumulator and the element' do
+      block = proc { |memo, word| memo.length > word.length ? memo : word }
+      expect(array_str.my_inject(&block)).to eq('bear')
+    end
+
+    describe '#multiply_els' do
+      it 'behaves same as inject but taking a proc block' do
+        block = proc { |product, n| product * n }
+        expect((5..10).my_inject(&block)).to eq(151_200)
+      end
     end
   end
 end
