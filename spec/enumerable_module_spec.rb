@@ -1,3 +1,5 @@
+# rubocop:disable Layout/LineLength
+
 require './enumerable_module'
 
 describe Enumerable do
@@ -251,9 +253,8 @@ describe Enumerable do
   end
 
   describe '#my_map' do
-    let(:new_block) { |item| "This is a(n) #{item}" }
     it 'returns a new array containing the evaluation of the block on every element of original array' do
-      expect(string_array.my_map(&new_block)).to eq(string_array.map(&new_block))
+      expect(string_array.my_map { |item| "This is a(n) #{item}" }).to eq(string_array.map { |item| "This is a(n) #{item}" })
     end
 
     it 'returns an Enumerator if no block is given' do
@@ -275,4 +276,55 @@ describe Enumerable do
       expect(array).to eq(array_clone)
     end
   end
+
+  describe '#my_inject' do
+    it 'raises a "LocalJumpError" when no block or argument is given' do
+      expect { array.my_inject }.to raise_error(LocalJumpError)
+    end
+
+    it 'does not change the state of original array' do
+      array.my_inject { |num| num + 1 }
+      expect(array).to eq(array_clone)
+    end
+
+    context 'when block is given and argument is not given' do
+      it 'returns the total evaluation of given block on all elements of the array' do
+        expect(array.my_inject { |sum, n| sum + n }).to eql(array.inject { |sum, n| sum + n })
+      end
+    end
+
+    context 'when block is given and argument is given' do
+      it 'returns the total evaluation of given block on all elements of the array '\
+      'using given argument as starting value' do
+        expect(array.my_inject(2) { |sum, n| sum + n }).to eql(array.inject(2) { |sum, n| sum + n })
+      end
+    end
+
+    context 'when symbol given and starting value not given' do
+      it 'returns total evaluation of given array using symbol as binary operator' do
+        expect(array.my_inject(:+)).to eql array.inject(:+)
+      end
+    end
+
+    context 'when symbol given and starting value given' do
+      it 'returns total evaluation of given array using symbol as binary operator'\
+      'using first argument as starting value' do
+        expect(array.my_inject(2, :+)).to eql array.inject(2, :+)
+      end
+    end
+
+    it 'returns the longest string in an array of strings' do
+      actual = string_array.inject do |memo, word|
+        memo.length > word.length ? memo : word
+      end
+
+      expected = string_array.my_inject do |memo, word|
+        memo.length > word.length ? memo : word
+      end
+
+      expect(expected).to eql actual
+    end
+  end
 end
+
+# rubocop:enable Layout/LineLength
