@@ -325,6 +325,12 @@ describe Enumerable do
       expect(expected).to eql actual
     end
   end
+
+  describe '#multiply_els' do
+    it 'returns the multiplication output of all elements in an array' do
+      expect(multiply_els(array)).to eql 24
+    end
+  end
 end
 
 # rubocop:enable Layout/LineLength
