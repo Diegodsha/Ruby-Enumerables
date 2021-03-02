@@ -53,7 +53,7 @@ module Enumerable
     if block_given?
       to_a.my_each { |item| return true if yield(item) }
     elsif !block_given? && param.nil?
-      return output = true if to_a.empty?
+      return output = false if to_a.empty?
 
       to_a.my_each { |item| return true if item }
     elsif param.is_a?(Regexp)
