@@ -29,6 +29,10 @@ To run this program on your local machine, simply follow the steps below:
 * GitHub: [@Moreneecoder](https://github.com/Moreneecoder)
 * Twitter - [@mo_bello19](https://twitter.com/mo_bello19)
 
+### Rashad Muntar
+* GitHub: [@Rashad-Muntar](https://github.com/Rashad-Muntar)
+* Twitter: [@RashadToure](https://twitter.com/twitterhandle)
+
 ### Diego Hernandez
 * GitHub: [@Diegodsha](https://github.com/Diegodsha)
 * Twitter: [@diegohdezchimo](https://twitter.com/diegohdezchimo)
