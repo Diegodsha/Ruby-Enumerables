@@ -230,4 +230,23 @@ describe Enumerable do
       end
     end
   end
+
+  describe '#my_count?' do
+    it 'returns the length of the array' do
+      expect(array.my_count).to eq array.count
+    end
+
+    it 'counts number of elements that are equal to given argument' do
+      expect(array.my_count(3)).to eq array.count(3)
+    end
+
+    it 'counts number of elements that evaluates to true on given block' do
+      expect(string_array.my_count(&block)).to eq string_array.count(&block)
+    end
+
+    it 'does not change the state of the original array' do
+      array.my_count { |num| num + 1 }
+      expect(array).to eq(array_clone)
+    end
+  end
 end
