@@ -32,7 +32,7 @@ To run this program on your local machine, simply follow the steps below:
 
 To test this wonderful project you need to:
 
-- install rspec gem with this command `gem install rspec`
+- Install rspec gem with this command `gem install rspec`
 - Import your class that want to test with `require './your_enumerable_module'` into file `spec/enumerable_module_spec.rb`
 - Then simply run `rspec` command in your terminal and tests will run (You need to cd into the project folder to run tests)
 
