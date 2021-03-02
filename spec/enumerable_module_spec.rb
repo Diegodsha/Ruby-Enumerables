@@ -2,7 +2,7 @@ require './enumerable_module'
 
 describe Enumerable do
   let(:array) { [1, 2, 3, 4] }
-  let(:string_array) { %w[ab abc abcdta] }
+  let(:string_array) { %w[Ox Cat Bear] }
   let(:num_str_array) { ['a', 2, 'abc', 5, 'xyzab', 3] }
   let(:hash) { { a: 5, b: 8, c: 3, d: 4, e: 9 } }
   let(:number_array) { [1, 21, 3.5] }
@@ -242,6 +242,32 @@ describe Enumerable do
 
     it 'counts number of elements that evaluates to true on given block' do
       expect(string_array.my_count(&block)).to eq string_array.count(&block)
+    end
+
+    it 'does not change the state of the original array' do
+      array.my_count { |num| num + 1 }
+      expect(array).to eq(array_clone)
+    end
+  end
+
+  describe '#my_map' do
+    let(:new_block) { |item| "This is a(n) #{item}" }
+    it 'returns a new array containing the evaluation of the block on every element of original array' do
+      expect(string_array.my_map(&new_block)).to eq(string_array.map(&new_block))
+    end
+
+    it 'returns an Enumerator if no block is given' do
+      expect(array.my_map).to be_an(Enumerator)
+    end
+
+    it 'returns a new array containing the evaluation of the block on every element of original array '\
+    'if argument is a proc' do
+      expect(array.my_map(&number_block)).to eq(array.map(&number_block))
+    end
+
+    it 'returns a new array and executes only the proc when both proc and block are given' do
+      new_proc = proc { |item| item.length >= 3 }
+      expect(string_array.my_map(new_proc) { |item| "This is a(n) #{item}" }).to eq(string_array.map(&new_proc))
     end
 
     it 'does not change the state of the original array' do
