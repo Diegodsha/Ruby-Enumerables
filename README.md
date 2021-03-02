@@ -15,6 +15,8 @@ We replicated methods like:
 
 To run this program on your local machine, simply follow the steps below:
 
+#
+
 ### Prerequisites
 
 - Install the [ruby programming language](https://www.ruby-lang.org/en/documentation/installation/)
@@ -23,14 +25,16 @@ To run this program on your local machine, simply follow the steps below:
 
 - Clone this repo on your local machine by running `git clone https://github.com/Diegodsha/Ruby-Enumerables.git`
 - cd into the folder you just cloned
-- run `ruby main.rb`
+- To test your project `require './your_enumerable_module'` into file `spec/enumerable_module_spec.rb`
+- run `rspec` commant in your terminal to run the tests
 
-### Testing
+### Testing RSpec
 
-- With RSPEC
+To test this wonderful project you need to:
 
-To test this wonderful project you need to install rspec gem with this command `gem install rspec`
-then simply run `rspec` command in your terminal and tests will run (You need to cd into the project folder to run tests)
+- install rspec gem with this command `gem install rspec`
+- Import your class that want to test with `require './your_enumerable_module'` into file `spec/enumerable_module_spec.rb`
+- Then simply run `rspec` command in your terminal and tests will run (You need to cd into the project folder to run tests)
 
 ## Built With
 
